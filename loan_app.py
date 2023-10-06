@@ -6,14 +6,8 @@ import pickle
 import base64
 
 # Caching mechanism that allows the app to stay perfomant
-# @st.cache (suppress_st_warning = True)
-# @st.cache_data ()
 @st.cache_resource ()
 def get_fvalue (val, feature_dict) :
-    # feature_dict = {
-    #     'No' : 1,
-    #     'Yes' : 2
-    # }
     for key, value in feature_dict.items () :
         if val == key :
             return value
@@ -76,7 +70,7 @@ elif app_mode == 'Prediction' :
     Loan_Amount_Term = st.sidebar.selectbox ('Loan_Amount_Term', (12.0,36.0,60.0,84.0,120.0,180.0,240.0,300.0,360.0))
     Credit_History = st.sidebar.radio ('Credit_History', (0.0,1.0))
     Property_Area = st.sidebar.radio ('Property Area', tuple (prop.keys ()))
-    Total_Income = st.sidebar.slider ('Total Income', 0, 20000, 0)
+    Total_Income = st.sidebar.slider('Total_Income', 0, 20000, (ApplicantIncome + CoapplicantIncome))
 
     class_0, class_1, class_2, class_3 = 0, 0, 0, 0
     if Dependents == '0' :
@@ -128,7 +122,6 @@ elif app_mode == 'Prediction' :
         'Property_Area' : [Property_Area_Rural, Property_Area_Urban, Property_Area_Semiurban]
     }
 
-    # feature_list = [ApplicantIncome, CoapplicantIncome, LoanAmount, Loan_Amount_Term, Credit_History, data1 ['Gender'][0], data1 ['Gender'][1], data1 ['Education'][0], data1 ['Education'][1], data1 ['Dependents'][0], data1 ['Dependents'][1], data1 ['Dependents'][2], data1 ['Dependents'][3], get_value (Education, edu), get_fvalue (Self_Employed), data1 ['Property_Area'][0], data1 ['Property_Area'][1], data1 ['Property_Area'][2]]
     feature_list = [
         get_fvalue (Dependents, dependents_dict), ApplicantIncome, CoapplicantIncome, LoanAmount,
         Loan_Amount_Term, Credit_History, Total_Income, data1 ['Gender'][0], data1 ['Gender'][1],
@@ -156,3 +149,6 @@ elif app_mode == 'Prediction' :
         elif prediction[0] == 'Y' :
             st.success(    'Congratulations!! you will get the loan from Bank'    )
             st.markdown(    f'<img src="data:image/gif;base64,{data_url}" alt="cat gif">',    unsafe_allow_html=True,    )
+
+st.markdown ('Made by H. Moustapha Ousmane'
+)
